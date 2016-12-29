@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="C:\Users\Kishore\Downloads\bootstrap-3.3.6-dist\bootstrap-3.3.6-dist\css\bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="C:\Users\Kishore\Downloads\bootstrap-3.3.6-dist\bootstrap-3.3.6-dist\js\bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container-fluid">
+  <h1>My First Bootstrap Page</h1>
+  <p>This is some text.</p> 
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <title>Smart Cities</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Josefin+Sans' rel='stylesheet' type='text/css'>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="http://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+</head>
+
+<style>
+
+body {
+    background-image: url("smartcity_bck.jpg");
+	-webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+
+}
+
+#textdisplay {
+	background-color: white;
+}
+
+</style>
+
+<body>
+
+<div class="container-fluid bg-1 text-center">
+
+<h2>Smart Cities - Crime Management</h2>
+</div>
+
+<div class="container-fluid text-center" id="mydiv">
+  <h3>Select a city</h3>
+  <input type="radio" name="city" value="Detroit" checked> Detroit
+  <input type="radio" name="city" value="Atlanta"> Atlanta
+  <input type="radio" name="city" value="Buffalo"> Buffalo
+  <input type="radio" name="city" value="New York"> New York
+  <input type="radio" name="city" value="Los Angeles"> Los Angeles
+  <input type="radio" name="city" value="San Francisco"> San Francisco
+  <input type="radio" name="city" value="Chicago"> Chicago
+  <br />
+  <h3>Select type of crime</h3>
+  <label class="checkbox-inline"><input type="checkbox" value="" id="checkbox1"> Murder</label>
+  <label class="checkbox-inline"><input type="checkbox" value="" id="checkbox2"> Theft</label>
+  <label class="checkbox-inline"><input type="checkbox" value="" id="checkbox3"> Assault</label>
+  <label class="checkbox-inline"><input type="checkbox" value="" id="checkbox4"> Rape</label>
+  <label class="checkbox-inline"><input type="checkbox" value="" id="checkbox5"> Arson</label>
+  <label class="checkbox-inline"><input type="checkbox" value="" id="checkbox6"> Burglary</label>
+  <label class="checkbox-inline"><input type="checkbox" value="" id="checkbox7"> Robbery</label>
+  <label class="checkbox-inline"><input type="checkbox" value="" id="checkbox8"> Infractions</label>
+  <br />
+  
+  <h3>Select date for analysis </h3>
+  <input type="date" id="fromDate" value="2016-4-21">
+  <input type="date" id="toDate" value="2016-4-30">
+  
+  <br />
+  <br />
+  <label for="usr">Search for specific crime tweets reported</label>
+  
+  <input type="text" class="form-control" id="usr" width="900">
+  <br />
+  <p id="demo"></p>
+  <br />
+  <button class="btn btn-default btn-lg" onclick="loadXMLDoc()" id="search">
+  <span class="glyphicon glyphicon-search"></span> Search
+  </button>
+  <button class="btn btn-default btn-lg" onclick="analyze()" id="analyze">
+  <span class="glyphicon glyphicon-star"></span> Analyze
+  </button>
+  <button class="btn btn-default btn-lg" onclick="map()" id="map">
+  <span class="glyphicon glyphicon-map-marker"></span> Map
+  </button>
+  <br />
+  <br />
+  
+  <>
+  
+  <script>
+  
+  function display_map() {
+  
+	  var location= $('input[type="radio"]:checked').val();
+	  
+	  //alert(location);
+	  
+	  if (location == "Detroit") {
+		display_map_detroit();
+	  } else if (location == "Atlanta") {
+		display_map_atlanta();
+	  } else if (location == "Chicago") {
+		display_map_chicago();
+	  } else if (location == "Buffalo") {
+		display_map_buffalo();
+	  } else if (location == "New York") {
+		display_map_new_york();
+	  } else if (location == "Los Angeles") {
+		display_map_los_angeles();
+	  } else if (location == "San Francisco") {
+		display_map_san_francisco();
+	  }
+  }
+  
+  function display_map_buffalo() {
+  
+	  google.charts.load('current', { packages: ['map']});
+      google.charts.setOnLoadCallback(drawMap);
+
+      function drawMap() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Address');
+        data.addColumn('string', 'Location');
+        data.addColumn('string', 'Marker')
+
+
+        data.addRows([
+           ['Chili Ave Buffalo, NY', 
+		   'Murder : Chili Ave Buffalo, NY', 
+		   'Murder'],
+           ['downtown Buffalo, NY', 
+		   'Robbery : downtown Buffalo, NY', 
+		   'Robbery'],
+		   ['River Rd Buffalo, NY', 
+		   'Robbery : River Rd Buffalo, NY', 
+		   'Robbery'],
+		   ['Queen St Buffalo, NY', 
+		   'Robbery : Queen St Buffalo, NY', 
+		   'Robbery'],
+		   ['Webster Ave Buffalo, NY', 
+		   'Arson : Webster Ave Buffalo, NY', 
+		   'Arson'],
+           ['Curtiss St Buffalo, NY', 
+		   'Murder : Curtiss St Buffalo, NY', 
+		   'Murder']
+        ]);
+        var url = 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/';
+
+        var options = {
+          zoomLevel: 11,
+          showTip: true,
+		  mapType: 'normal',
+          useMapTypeControl: true,
+          icons: {
+            Murder: {
+              normal: url + 'Map-Marker-Marker-Outside-Chartreuse-icon.png',
+            },
+            Theft: {
+              normal: url + 'Map-Marker-Bubble-Chartreuse-icon.png',
+            },
+			Assault: {
+              normal: url + 'Map-Marker-Bubble-Pink-icon.png',
+            },
+            Rape: {
+              normal: url + 'Map-Marker-Marker-Inside-Pink-icon.png',
+            },
+			Robbery: {
+              normal: url + 'Map-Marker-Marker-Inside-Chartreuse-icon.png',
+            },
+			Infractions: {
+              normal: url + 'Map-Marker-Bubble-Azure-icon.png',
+            },
+            Arson: {
+              normal: url + 'Map-Marker-Marker-Outside-Pink-icon.png',
+            },
+            Burglary: {
+              normal: url + 'Map-Marker-Marker-Outside-Azure-icon.png',
+            }
+          }
+        };
+        var map = new google.visualization.Map(document.getElementById('map_div'));
+
+        map.draw(data, options);
+      }
+  }
+  
+  function display_map_atlanta() {
+  
+	  google.charts.load('current', { packages: ['map']});
+      google.charts.setOnLoadCallback(drawMap);
+
+      function drawMap() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Address');
+        data.addColumn('string', 'Location');
+        data.addColumn('string', 'Marker')
+
+
+        data.addRows([
+           ['200 BLOCK OF HOWELL TER SW, Atlanta, GA', 
+		   'Burglary : 200 BLOCK OF HOWELL TER SW, Atlanta, GA', 
+		   'Burglary'],
+           ['1300 BLOCK OF BOULEVARD LORRAINE SW, Atlanta, GA', 
+		   'Burglary : 1300 BLOCK OF BOULEVARD LORRAINE SW, Atlanta, GA', 
+		   'Burglary'],
+		   ['River Rd Atlanta, GA', 
+		   'Robbery : River Rd Atlanta, GA', 
+		   'Robbery'],
+		   ['BROTHERS AVE Atlanta, GA', 
+		   'Theft : BROTHERS AVE Atlanta, GA', 
+		   'Theft'],
+		   ['600 BLOCK OF PHIPPS BLVD., Atlanta, GA', 
+		   'Rape : 600 BLOCK OF PHIPPS BLVD., Atlanta, GA', 
+		   'Rape'],
+		   ['100 BLOCK OF PEYTON PL, Atlanta, GA', 
+		   'Rape : 100 BLOCK OF PEYTON PL, Atlanta, GA', 
+		   'Rape'],
+		   ['3400 BLOCK OF BROWNS MILL RD SW, Atlanta, GA', 
+		   'Rape : 3400 BLOCK OF BROWNS MILL RD SW, Atlanta, GA', 
+		   'Rape'],
+           ['1600 BLOCK OF ORLANDO ST SW, Atlanta, GA', 
+		   'Burglary : 1600 BLOCK OF ORLANDO ST SW, Atlanta, GA', 
+		   'Burglary']
+        ]);
+        var url = 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/';
+
+        var options = {
+          zoomLevel: 11,
+          showTip: true,
+		  mapType: 'normal',
+          useMapTypeControl: true,
+          icons: {
+            Murder: {
+              normal: url + 'map-marker-icon.png',
+            },
+            Theft: {
+              normal: url + 'Map-Marker-Bubble-Chartreuse-icon.png',
+            },
+			Assault: {
+              normal: url + 'Map-Marker-Bubble-Pink-icon.png',
+            },
+            Rape: {
+              normal: url + 'Map-Marker-Marker-Inside-Pink-icon.png',
+            },
+			Robbery: {
+              normal: url + 'Map-Marker-Marker-Inside-Chartreuse-icon.png',
+            },
+			Infractions: {
+              normal: url + 'Map-Marker-Bubble-Azure-icon.png',
+            },
+            Arson: {
+              normal: url + 'Map-Marker-Marker-Outside-Pink-icon.png',
+            },
+            Burglary: {
+              normal: url + 'Map-Marker-Marker-Outside-Azure-icon.png',
+            }
+          }
+        };
+        var map = new google.visualization.Map(document.getElementById('map_div'));
+
+        map.draw(data, options);
+      }
+  }
+  
+  function display_map_chicago() {
+  
+  
+	  google.charts.load('current', { packages: ['map']});
+      google.charts.setOnLoadCallback(drawMap);
+
+      function drawMap() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Address');
+        data.addColumn('string', 'Location');
+        data.addColumn('string', 'Marker')
+
+
+        data.addRows([
+           ['Norris St Chicago', 
+		   'Robbery : Norris St Chicago', 
+		   'Robbery']
+        ]);
+        var url = 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/';
+
+        var options = {
+          zoomLevel: 11,
+          showTip: true,
+		  mapType: 'normal',
+          useMapTypeControl: true,
+          icons: {
+            Murder: {
+              normal: url + 'Map-Marker-Marker-Outside-Chartreuse-icon.png',
+            },
+            Theft: {
+              normal: url + 'Map-Marker-Bubble-Chartreuse-icon.png',
+            },
+			Assault: {
+              normal: url + 'Map-Marker-Bubble-Pink-icon.png',
+            },
+            Rape: {
+              normal: url + 'Map-Marker-Marker-Inside-Pink-icon.png',
+            },
+			Robbery: {
+              normal: url + 'Map-Marker-Marker-Inside-Chartreuse-icon.png',
+            },
+			Infractions: {
+              normal: url + 'Map-Marker-Bubble-Azure-icon.png',
+            },
+            Arson: {
+              normal: url + 'Map-Marker-Marker-Outside-Pink-icon.png',
+            },
+            Burglary: {
+              normal: url + 'Map-Marker-Marker-Outside-Azure-icon.png',
+            }
+          }
+        };
+        var map = new google.visualization.Map(document.getElementById('map_div'));
+
+        map.draw(data, options);
+      }
+  }
+  
+  function display_map_detroit() {
+  
+	  google.charts.load('current', { packages: ['map']});
+      google.charts.setOnLoadCallback(drawMap);
+
+      function drawMap() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Address');
+        data.addColumn('string', 'Location');
+        data.addColumn('string', 'Marker')
+
+
+        data.addRows([
+           ['Bessemer Ave Detroit', 
+		   'Murder : Bessemer Ave Detroit', 
+		   'Murder'],
+           ['Brookpark Rd Detroit', 
+		   'Robbery : Brookpark Rd Detroit', 
+		   'Robbery'],
+		   ['downtown Detroit', 
+		   'Rape : downtown Detroit', 
+		   'Rape'],
+		   ['Park Ave Detroit', 
+		   'Assault : Park Ave Detroit', 
+		   'Assault'],
+           ['2nd rd Detroit', 
+		   'Murder : 2nd rd Detroit', 
+		   'Murder']
+        ]);
+        var url = 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/';
+
+        var options = {
+          zoomLevel: 11,
+          showTip: true,
+		  mapType: 'normal',
+          useMapTypeControl: true,
+          icons: {
+            Murder: {
+              normal: url + 'Map-Marker-Marker-Outside-Chartreuse-icon.png',
+            },
+            Theft: {
+              normal: url + 'Map-Marker-Bubble-Chartreuse-icon.png',
+            },
+			Assault: {
+              normal: url + 'Map-Marker-Bubble-Pink-icon.png',
+            },
+            Rape: {
+              normal: url + 'Map-Marker-Marker-Inside-Pink-icon.png',
+            },
+			Robbery: {
+              normal: url + 'Map-Marker-Marker-Inside-Chartreuse-icon.png',
+            },
+			Infractions: {
+              normal: url + 'Map-Marker-Bubble-Azure-icon.png',
+            },
+            Arson: {
+              normal: url + 'Map-Marker-Marker-Outside-Pink-icon.png',
+            },
+            Burglary: {
+              normal: url + 'Map-Marker-Marker-Outside-Azure-icon.png',
+            }
+          }
+        };
+        var map = new google.visualization.Map(document.getElementById('map_div'));
+
+        map.draw(data, options);
+      }
+  
+  }
+  
+  function display_map_los_angeles() {
+  
+	  google.charts.load('current', { packages: ['map']});
+      google.charts.setOnLoadCallback(drawMap);
+
+      function drawMap() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Address');
+        data.addColumn('string', 'Location');
+        data.addColumn('string', 'Marker')
+
+
+        data.addRows([
+           ['downtown Los Angeles', 
+		   'Burglary : downtown Los Angeles', 
+		   'Burglary'],
+		   ['FOREST DR Los Angeles', 
+		   'Robbery : FOREST DR Los Angeles', 
+		   'Robbery'],
+		   ['DuPont Dr Los Angeles', 
+		   'Arson : DuPont Dr Los Angeles', 
+		   'Arson']
+        ]);
+        var url = 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/';
+
+        var options = {
+          zoomLevel: 11,
+          showTip: true,
+		  mapType: 'normal',
+          useMapTypeControl: true,
+          icons: {
+            Murder: {
+              normal: url + 'Map-Marker-Marker-Outside-Chartreuse-icon.png',
+            },
+            Theft: {
+              normal: url + 'Map-Marker-Bubble-Chartreuse-icon.png',
+            },
+			Assault: {
+              normal: url + 'Map-Marker-Bubble-Pink-icon.png',
+            },
+            Rape: {
+              normal: url + 'Map-Marker-Marker-Inside-Pink-icon.png',
+            },
+			Robbery: {
+              normal: url + 'Map-Marker-Marker-Inside-Chartreuse-icon.png',
+            },
+			Infractions: {
+              normal: url + 'Map-Marker-Bubble-Azure-icon.png',
+            },
+            Arson: {
+              normal: url + 'Map-Marker-Marker-Outside-Pink-icon.png',
+            },
+            Burglary: {
+              normal: url + 'Map-Marker-Marker-Outside-Azure-icon.png',
+            }
+          }
+        };
+        var map = new google.visualization.Map(document.getElementById('map_div'));
+
+        map.draw(data, options);
+      }
+  }
+  
+  function display_map_new_york() {
+     
+	  google.charts.load('current', { packages: ['map']});
+      google.charts.setOnLoadCallback(drawMap);
+
+      function drawMap() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Address');
+        data.addColumn('string', 'Location');
+        data.addColumn('string', 'Marker')
+
+
+        data.addRows([
+           ['Tremont Ave New York', 
+		   'Robbery : Tremont Ave New York', 
+		   'Robbery'],
+		   ['Walnut St New York', 
+		   'Robbery : Walnut St New York', 
+		   'Robbery'],
+		   ['MIDTOWN New York', 
+		   'Robbery : MIDTOWN New York', 
+		   'Robbery']
+        ]);
+        var url = 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/';
+
+        var options = {
+          zoomLevel: 11,
+          showTip: true,
+		  mapType: 'normal',
+          useMapTypeControl: true,
+          icons: {
+            Murder: {
+              normal: url + 'Map-Marker-Marker-Outside-Chartreuse-icon.png',
+            },
+            Theft: {
+              normal: url + 'Map-Marker-Bubble-Chartreuse-icon.png',
+            },
+			Assault: {
+              normal: url + 'Map-Marker-Bubble-Pink-icon.png',
+            },
+            Rape: {
+              normal: url + 'Map-Marker-Marker-Inside-Pink-icon.png',
+            },
+			Robbery: {
+              normal: url + 'Map-Marker-Marker-Inside-Chartreuse-icon.png',
+            },
+			Infractions: {
+              normal: url + 'Map-Marker-Bubble-Azure-icon.png',
+            },
+            Arson: {
+              normal: url + 'Map-Marker-Marker-Outside-Pink-icon.png',
+            },
+            Burglary: {
+              normal: url + 'Map-Marker-Marker-Outside-Azure-icon.png',
+            }
+          }
+        };
+        var map = new google.visualization.Map(document.getElementById('map_div'));
+
+        map.draw(data, options);
+      }
+  }
+  
+  function display_map_san_francisco() {
+		  google.charts.load('current', { packages: ['map']});
+      google.charts.setOnLoadCallback(drawMap);
+
+      function drawMap() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Address');
+        data.addColumn('string', 'Location');
+        data.addColumn('string', 'Marker')
+
+
+        data.addRows([
+		   ['First Ave San Francisco', 
+		   'Murder : First Ave San Francisco', 
+		   'Murder']
+        ]);
+        var url = 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/';
+
+        var options = {
+          zoomLevel: 11,
+          showTip: true,
+		  mapType: 'normal',
+          useMapTypeControl: true,
+          icons: {
+            Murder: {
+              normal: url + 'Map-Marker-Marker-Outside-Chartreuse-icon.png',
+            },
+            Theft: {
+              normal: url + 'Map-Marker-Bubble-Chartreuse-icon.png',
+            },
+			Assault: {
+              normal: url + 'Map-Marker-Bubble-Pink-icon.png',
+            },
+            Rape: {
+              normal: url + 'Map-Marker-Marker-Inside-Pink-icon.png',
+            },
+			Robbery: {
+              normal: url + 'Map-Marker-Marker-Inside-Chartreuse-icon.png',
+            },
+			Infractions: {
+              normal: url + 'Map-Marker-Bubble-Azure-icon.png',
+            },
+            Arson: {
+              normal: url + 'Map-Marker-Marker-Outside-Pink-icon.png',
+            },
+            Burglary: {
+              normal: url + 'Map-Marker-Marker-Outside-Azure-icon.png',
+            }
+          }
+        };
+        var map = new google.visualization.Map(document.getElementById('map_div'));
+
+        map.draw(data, options);
+      }
+  }
+  
+  function display_chart() {
+ 
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawSeriesChart);
+
+    function drawSeriesChart() {
+
+      var data = google.visualization.arrayToDataTable([
+        ['ID', 	  'Time',              'Day',     'Region',     'Number of Crime'],
+        ['CAN',    3,              1,      'North America',  33739900],
+        ['DEU',    6,              2,      'Europe',         81902307],
+        ['DNK',    9,              3,      'Europe',         5523095],
+        ['EGY',    10,              4,      'Middle East',    79716203],
+        ['GBR',    11,              5,         'Europe',         61801570],
+        ['IRN',    12,              6,       'Middle East',    73137148],
+        ['IRQ',    0,              7,      'Middle East',    31090763]
+      ]);
+
+      var options = {
+        title: 'Correlation between crime and day and month of an year :',
+        hAxis: {title: 'Time'},
+        vAxis: {title: 'Day'},
+        bubble: {textStyle: {fontSize: 11}}
+      };
+
+      var chart = new google.visualization.BubbleChart(document.getElementById('series_chart_div'));
+      chart.draw(data, options);
+    }
+}
+
+  function map() {
+  $('#textdisplay').hide();
+  $('#map_div').show();
+  $('#chartContainer').hide();
+  $('#lineChartContainer').hide();
+  
+  display_map();
+  
+  }
+
+  function analyze() {
+  
+  $('#textdisplay').hide();
+  $('#map_div').hide();
+  $('#chartContainer').show();
+  $('#lineChartContainer').show();
+  
+	analyzeDistribution();
+	analyzeTimeDistribution();
+  
+  }
+   
+  function analyzeDistribution() {
+ 
+  
+  var location= $('input[type="radio"]:checked').val();
+  location = '"'+location+'"';
+  //alert(location);
+  
+  var xhttp1 = new XMLHttpRequest();
+  xhttp1.open("GET", 'http://uakkb7c54615.akashmandole.koding.io:8983/solr/AIR_Solr/select?q=*&fq=city%3A'+location+'&fq=class%3Amurder&wt=json&indent=true', true);
+  xhttp1.send();
+  xhttp1.onreadystatechange = function() {
+    if (xhttp1.readyState == 4 && xhttp1.status == 200) {
+		var obj1 = JSON.parse(xhttp1.responseText);
+		var nMurder = obj1.response.numFound;
+		//alert(nMurder);
+		var xhttp2 = new XMLHttpRequest();
+		xhttp2.open("GET", 'http://uakkb7c54615.akashmandole.koding.io:8983/solr/AIR_Solr/select?q=*&fq=city%3A'+location+'&fq=class%3Atheft&wt=json&indent=true', true);
+		xhttp2.send();
+		xhttp2.onreadystatechange = function() {
+			if (xhttp2.readyState == 4 && xhttp2.status == 200) {
+				//alert("receive");
+				var obj2 = JSON.parse(xhttp2.responseText);
+				var nTheft = obj2.response.numFound;
+				var xhttp3 = new XMLHttpRequest();
+				xhttp3.open("GET", 'http://uakkb7c54615.akashmandole.koding.io:8983/solr/AIR_Solr/select?q=*&fq=city%3A'+location+'&fq=class%3Aassault&wt=json&indent=true', true);
+				xhttp3.send();
+				xhttp3.onreadystatechange = function() {
+					if (xhttp3.readyState == 4 && xhttp3.status == 200) {
+						//alert("receive");
+						var obj3 = JSON.parse(xhttp3.responseText);
+						var nAssault = obj3.response.numFound;
+		
+						////////
+						var xhttp4 = new XMLHttpRequest();
+						xhttp4.open("GET", 'http://uakkb7c54615.akashmandole.koding.io:8983/solr/AIR_Solr/select?q=*&fq=city%3A'+location+'&fq=class%3Arape&wt=json&indent=true', true);
+						xhttp4.send();
+						xhttp4.onreadystatechange = function() {
+							if (xhttp4.readyState == 4 && xhttp4.status == 200) {
+								//alert("receive");
+								var obj4 = JSON.parse(xhttp4.responseText);
+								var nRape = obj4.response.numFound;
+								/////////////
+								var xhttp5 = new XMLHttpRequest();
+								xhttp5.open("GET", 'http://uakkb7c54615.akashmandole.koding.io:8983/solr/AIR_Solr/select?q=*&fq=city%3A'+location+'&fq=class%3Arobbery&wt=json&indent=true', true);
+								xhttp5.send();
+								xhttp5.onreadystatechange = function() {
+									if (xhttp5.readyState == 4 && xhttp5.status == 200) {
+										//alert("receive");
+										var obj5 = JSON.parse(xhttp5.responseText);
+										var nRobbery = obj5.response.numFound;
+										/////////////
+										var xhttp6 = new XMLHttpRequest();
+										xhttp6.open("GET", 'http://uakkb7c54615.akashmandole.koding.io:8983/solr/AIR_Solr/select?q=*&fq=city%3A'+location+'&fq=class%3Ainfractions&wt=json&indent=true', true);
+										xhttp6.send();
+										xhttp6.onreadystatechange = function() {
+											if (xhttp6.readyState == 4 && xhttp6.status == 200) {
+												//alert("receive");
+												var obj6 = JSON.parse(xhttp6.responseText);
+												var nInfractions = obj6.response.numFound;
+												/////////////
+												var xhttp8 = new XMLHttpRequest();
+												xhttp8.open("GET", 'http://uakkb7c54615.akashmandole.koding.io:8983/solr/AIR_Solr/select?q=*&fq=city%3A'+location+'&fq=class%3Aarson&wt=json&indent=true', true);
+												xhttp8.send();
+												xhttp8.onreadystatechange = function() {
+													if (xhttp8.readyState == 4 && xhttp8.status == 200) {
+														//alert("receive");
+														var obj8 = JSON.parse(xhttp8.responseText);
+														var nArson = obj8.response.numFound;
+														/////////////
+														var xhttp7 = new XMLHttpRequest();
+														xhttp7.open("GET", 'http://uakkb7c54615.akashmandole.koding.io:8983/solr/AIR_Solr/select?q=*&fq=city%3A'+location+'&fq=class%3Aburglary&wt=json&indent=true', true);
+														xhttp7.send();
+														xhttp7.onreadystatechange = function() {
+															if (xhttp7.readyState == 4 && xhttp7.status == 200) {
+																//alert("receive");
+																var obj7 = JSON.parse(xhttp7.responseText);
+																var nBurglary = obj7.response.numFound;
+																/////////////
+																drawChart(nMurder,nTheft,nAssault, nRape, nRobbery, nInfractions, nArson, nBurglary);
+																/////////////
+							
+															}// end of if
+														}// end of func
+														/////////////
+							
+													}// end of if
+												}// end of func
+												/////////////
+							
+											}// end of if
+										}// end of func
+										/////////////
+							
+									}// end of if
+								}// end of func
+								/////////////
+							
+							}// end of if
+						}// end of func
+						///////
+						
+					}// end of if
+				}// end of func
+	
+			}// end of if  
+		}// end of function
+	}// end of if
+  }// end of function 
+  }// end of main function
+  
+  
+  function analyzeTimeDistribution() {
+  
+	var location= $('input[type="radio"]:checked').val();
+	  
+	  //alert(location);
+	  
+	  if (location == "Detroit") {
+		drawLineChart(53,81,86,118,105,161,121,128,205,258,516,44);
+	  } else if (location == "Atlanta") {
+		drawLineChart(53,81,86,118,105,161,121,128,205,258,516,44);
+	  } else if (location == "Chicago") {
+		drawLineChart(53,81,86,118,105,161,121,128,205,258,516,44);
+	  } else if (location == "Buffalo") {
+		drawLineChart(28,51,101,98,95,89,130,128,145,282,500,26);
+	  } else if (location == "New York") {
+		drawLineChart(53,81,86,118,105,161,121,128,205,258,516,44);
+	  } else if (location == "Los Angeles") {
+		drawLineChart(53,81,86,118,105,161,121,128,205,258,516,44);
+	  } else if (location == "San Francisco") {
+		drawLineChart(53,81,86,118,105,161,121,128,205,258,516,44);
+	  }
+	  
+  }  
+  function analyzeDayWise() {
+	
+	var fromDate = $('#fromDate').val();
+	var toDate   = $('#toDate').val();
+	
+	var start = new Date(fromDate);
+	var end = new Date(toDate);
+	
+	//alert(start);
+	//alert(end);
+	
+	var dict = {}
+	//var solrEnd   = formatDate(end.setDate(end.getDate() + 1));
+	
+	while(start <= end){
+       //alert(formatDate(start)); 
+	   var solrStart = formatDate(start);
+	   //alert(solrStart);
+	   //alert("continue...");
+		
+       var newDate = start.setDate(start.getDate() + 1);
+       start = new Date(newDate);
+	   //alert(formatDate(start));
+	   var solrEnd = formatDate(start);
+	   //alert(solrEnd);
+	  // alert(start);
+	  // alert(end);
+	   
+	   var xhttp1 = new XMLHttpRequest();
+		xhttp1.open("GET", 'http://uakkb7c54615.akashmandole.koding.io:8983/solr/AIR_Solr/select?q=class%3Afelonies&fq=location%3Aatlanta&fq=created_at%3A%5B'+solrStart+'T00%3A00%3A00Z+TO+'+solrEnd+'T00%3A00%3A00Z%5D&wt=json&indent=true', true);
+		xhttp1.send();
+		xhttp1.onreadystatechange = function() {
+			if (xhttp1.readyState == 4 && xhttp1.status == 200) {
+				var obj1 = JSON.parse(xhttp1.responseText);
+				var n1 = obj1.response.numFound;
+				//alert(solrStart);
+				//alert(n1);
+				dict[solrStart]=n1;
+				drawLineChart(dict);
+				//xhttp1.close();
+			}
+		}
+		
+    }
+	
+		
+
+	//alert(fromDate);
+	//alert(toDate);
+	
+	//var fromDateObj = new Date(fromDate);
+	//var toDateObj   = new Date();
+	//alert(fromDateObj);
+  
+	
+  
+  }
+  
+  function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+  
+  function drawLineChart(n1,n2,n3,n4,n5,n6,n7,n8,n9,n10,n11,n12) {
+  var chart = new CanvasJS.Chart("lineChartContainer",
+	{
+		animationEnabled: true,
+		title:{
+			text: "Crime Report with Time (1:00 PM to 12:00 AM)"
+		},
+		data: [
+		{
+			type: "spline", //change type to bar, line, area, pie, etc
+			showInLegend: true,        
+			dataPoints: [
+				{ x: 1, y: n1 },
+				{ x: 2, y: n2},
+				{ x: 3, y: n3 },
+				{ x: 4, y: n4 },
+				{ x: 5, y: n5 },
+				{ x: 6, y: n6 },
+				{ x: 7, y: n7},
+				{ x: 8, y: n8 },
+				{ x: 9, y: n9 },
+				{ x: 10, y: n10 },
+				{ x: 11, y: n11 },
+				{ x: 12, y: n12 }
+			]
+			}
+		],
+		legend: {
+			cursor: "pointer",
+			itemclick: function (e) {
+				if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+					e.dataSeries.visible = false;
+				} else {
+					e.dataSeries.visible = true;
+			}
+			chart.render();
+			}
+		}
+	});
+
+	chart.render();
+  }
+  
+  function drawChart(nMurder,nTheft,nAssault, nRape, nRobbery, nInfractions, nArson, nBurglary) {
+  
+	var chart = new CanvasJS.Chart("chartContainer",
+	{
+	
+		title:{
+				text: "Top Categories of Crime and their distributions"
+			},
+				exportFileName: "Pie Chart",
+				exportEnabled: true,
+				animationEnabled: true,
+				legend:{
+						verticalAlign: "bottom",
+						horizontalAlign: "center"
+						},
+						data: [
+								{       
+									type: "pie",
+									showInLegend: true,
+									toolTipContent: "{legendText}: <strong>{y}</strong>",
+									indexLabel: "{label} {y}",
+									dataPoints: [
+													{  y: nMurder, legendText: "Murder", exploded: true, label: "Murder" },
+													{  y: nAssault, legendText: "Theft", label: "Theft" },
+													{  y: nTheft, legendText: "Assault", label: "Assault" },
+													{  y: nRape, legendText: "Rape", label: "Rape" },
+													{  y: nRobbery, legendText: "Robbery", label: "Robbery" },
+													{  y: nInfractions, legendText: "Infractions", label: "Infractions" },
+													{  y: nArson, legendText: "Arson", label: "Arson" },
+													{  y: nBurglary, legendText: "Burglary", label: "Burglary" },
+												]
+								}
+							  ]
+	});
+	chart.render();	
+  }
+  
+ function loadXMLDoc() {
+  $('#textdisplay').show();
+  $('#map_div').hide();
+  $('#chartContainer').hide();
+  $('#lineChartContainer').hide();
+ 
+ var query = document.getElementById("usr").value;
+ 
+ //var location = document.getElementsByName("city").value;
+ var location= $('input[type="radio"]:checked').val();
+ //alert(location);
+ 
+ if (document.getElementById("checkbox1").checked == true)
+ {
+  var xhttp = new XMLHttpRequest();
+ 
+  xhttp.open("GET", 'http://uakkb7c54615.akashmandole.koding.io:8983/solr/AIR_Solr/select?q='+query+'&fq=city%3A'+location+'&fq=class%3Amurder&wt=json&indent=true', true);
+  xhttp.send();
+  xhttp.onreadystatechange = function() {
+    if (xhttp.readyState == 4 && xhttp.status == 200) {
+	//alert("receive");
+	 var obj = JSON.parse(xhttp.responseText);
+	 for(i=0; i<20; i++)
+	 {
+	   var x = document.createElement("P");                        // Create a <p> node
+	   var t = document.createTextNode("Tweet: " + obj.response.docs[i].text  );    // Create a text node
+	   x.appendChild(t);           
+	   document.getElementById("textdisplay").appendChild(x); 
+
+	 }
+    }
+   };
+ }
+ else if (document.getElementById("checkbox2").checked == true)
+ {
+  var xhttp = new XMLHttpRequest();
+ 
+  xhttp.open("GET", 'http://uakkb7c54615.akashmandole.koding.io:8983/solr/AIR_Solr/select?q='+query+'&fq=city%3A'+location+'&fq=class%3Atheft&wt=json&indent=true', true);
+  xhttp.send();
+  xhttp.onreadystatechange = function() {
+    if (xhttp.readyState == 4 && xhttp.status == 200) {
+	//alert("receive");
+	 var obj = JSON.parse(xhttp.responseText);
+	 for(i=0; i<20; i++)
+	 {
+	   var x = document.createElement("P");                        // Create a <p> node
+	   var t = document.createTextNode("Tweet: " + obj.response.docs[i].text  );    // Create a text node
+	   x.appendChild(t);           
+	   document.getElementById("textdisplay").appendChild(x); 
+
+	 }
+    }
+   };
+ }
+ 
+ else if (document.getElementById("checkbox3").checked == true)
+ {
+  var xhttp = new XMLHttpRequest();
+ 
+  xhttp.open("GET", 'http://uakkb7c54615.akashmandole.koding.io:8983/solr/AIR_Solr/select?q='+query+'&fq=city%3A'+location+'&fq=class%3Aassault&wt=json&indent=true', true);
+  xhttp.send();
+  xhttp.onreadystatechange = function() {
+    if (xhttp.readyState == 4 && xhttp.status == 200) {
+	//alert("receive");
+	 var obj = JSON.parse(xhttp.responseText);
+	 for(i=0; i<20; i++)
+	 {
+	   var x = document.createElement("P");                        // Create a <p> node
+	   var t = document.createTextNode("Tweet: " + obj.response.docs[i].text  );    // Create a text node
+	   x.appendChild(t);           
+	   document.getElementById("textdisplay").appendChild(x); 
+
+	 }
+    }
+   };
+ }
+ else if (document.getElementById("checkbox4").checked == true)
+ {
+  var xhttp = new XMLHttpRequest();
+ 
+  xhttp.open("GET", 'http://uakkb7c54615.akashmandole.koding.io:8983/solr/AIR_Solr/select?q='+query+'&fq=city%3A'+location+'&fq=class%3Arape&wt=json&indent=true', true);
+  xhttp.send();
+  xhttp.onreadystatechange = function() {
+    if (xhttp.readyState == 4 && xhttp.status == 200) {
+	//alert("receive");
+	 var obj = JSON.parse(xhttp.responseText);
+	 for(i=0; i<20; i++)
+	 {
+	   var x = document.createElement("P");                        // Create a <p> node
+	   var t = document.createTextNode("Tweet: " + obj.response.docs[i].text  );    // Create a text node
+	   x.appendChild(t);           
+	   document.getElementById("textdisplay").appendChild(x); 
+
+	 }
+    }
+   };
+ }
+ else if (document.getElementById("checkbox5").checked == true)
+ {
+  var xhttp = new XMLHttpRequest();
+ 
+  xhttp.open("GET", 'http://uakkb7c54615.akashmandole.koding.io:8983/solr/AIR_Solr/select?q='+query+'&fq=city%3A'+location+'&fq=class%3Aarson&wt=json&indent=true', true);
+  xhttp.send();
+  xhttp.onreadystatechange = function() {
+    if (xhttp.readyState == 4 && xhttp.status == 200) {
+	//alert("receive");
+	 var obj = JSON.parse(xhttp.responseText);
+	 for(i=0; i<20; i++)
+	 {
+	   var x = document.createElement("P");                        // Create a <p> node
+	   var t = document.createTextNode("Tweet: " + obj.response.docs[i].text  );    // Create a text node
+	   x.appendChild(t);           
+	   document.getElementById("textdisplay").appendChild(x); 
+
+	 }
+    }
+   };
+ }
+ else if (document.getElementById("checkbox6").checked == true)
+ {
+  var xhttp = new XMLHttpRequest();
+ 
+  xhttp.open("GET", 'http://uakkb7c54615.akashmandole.koding.io:8983/solr/AIR_Solr/select?q='+query+'&fq=city%3A'+location+'&fq=class%3Aburglary&wt=json&indent=true', true);
+  xhttp.send();
+  xhttp.onreadystatechange = function() {
+    if (xhttp.readyState == 4 && xhttp.status == 200) {
+	//alert("receive");
+	 var obj = JSON.parse(xhttp.responseText);
+	 for(i=0; i<20; i++)
+	 {
+	   var x = document.createElement("P");                        // Create a <p> node
+	   var t = document.createTextNode("Tweet: " + obj.response.docs[i].text  );    // Create a text node
+	   x.appendChild(t);           
+	   document.getElementById("textdisplay").appendChild(x); 
+
+	 }
+    }
+   };
+ }
+ else if (document.getElementById("checkbox7").checked == true)
+ {
+  var xhttp = new XMLHttpRequest();
+ 
+  xhttp.open("GET", 'http://uakkb7c54615.akashmandole.koding.io:8983/solr/AIR_Solr/select?q='+query+'&fq=city%3A'+location+'&fq=class%3Arobbery&wt=json&indent=true', true);
+  xhttp.send();
+  xhttp.onreadystatechange = function() {
+    if (xhttp.readyState == 4 && xhttp.status == 200) {
+	//alert("receive");
+	 var obj = JSON.parse(xhttp.responseText);
+	 for(i=0; i<20; i++)
+	 {
+	   var x = document.createElement("P");                        // Create a <p> node
+	   var t = document.createTextNode("Tweet: " + obj.response.docs[i].text  );    // Create a text node
+	   x.appendChild(t);           
+	   document.getElementById("textdisplay").appendChild(x); 
+
+	 }
+    }
+   };
+ }
+ else if (document.getElementById("checkbox8").checked == true)
+ {
+  var xhttp = new XMLHttpRequest();
+ 
+  xhttp.open("GET", 'http://uakkb7c54615.akashmandole.koding.io:8983/solr/AIR_Solr/select?q='+query+'&fq=city%3A'+location+'&fq=class%3Ainfractions&wt=json&indent=true', true);
+  xhttp.send();
+  xhttp.onreadystatechange = function() {
+    if (xhttp.readyState == 4 && xhttp.status == 200) {
+	//alert("receive");
+	 var obj = JSON.parse(xhttp.responseText);
+	 for(i=0; i<20; i++)
+	 {
+	   var x = document.createElement("P");                        // Create a <p> node
+	   var t = document.createTextNode("Tweet: " + obj.response.docs[i].text  );    // Create a text node
+	   x.appendChild(t);           
+	   document.getElementById("textdisplay").appendChild(x); 
+
+	 }
+    }
+   };
+ }
+ else
+ {
+  var xhttp = new XMLHttpRequest();
+ 
+  xhttp.open("GET", 'http://uakkb7c54615.akashmandole.koding.io:8983/solr/AIR_Solr/select?q='+query+'&fq=city%3A'+location+'&wt=json&indent=true', true);
+  xhttp.send();
+  xhttp.onreadystatechange = function() {
+    if (xhttp.readyState == 4 && xhttp.status == 200) {
+	//alert("receive");
+	 var obj = JSON.parse(xhttp.responseText);
+	 for(i=0; i<20; i++)
+	 {
+	   var x = document.createElement("P");                        // Create a <p> node
+	   var t = document.createTextNode("Tweet: " + obj.response.docs[i].text);    // Create a text node
+	   x.appendChild(t);           
+	   document.getElementById("textdisplay").appendChild(x); 
+
+	 }
+    }
+   };
+ }
+}
+
+</script>
+
+<div id="map_div" style="height: 500px; width: 100%"></div> 
+<br />
+<br />
+
+<div id="chartContainer" style="height: 300px; width: 100%;"></div>
+<br />
+<br />
+
+<div id="lineChartContainer" style="height: 300px; width: 100%;"></div>
+
+<div id="textdisplay" style="overflow:scroll; height:300px; width: 100%"></div>
+
+</div>
+</body>
+</html>
+
+
+
